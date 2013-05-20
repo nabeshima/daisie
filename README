@@ -1,0 +1,18 @@
+REQUIREMENTS:
+libcutil, https://libcutil.googlecode.com/
+libglutil, https://glutil.googlecode.com/
+Open Dynamics Engine (ODE), http://sourceforge.net/projects/opende/ (0.10 or later)
+pkg-config for X11 glut ode
+
+DAISIE is a C++ wrapper library for Open Dynamics Engine.
+
+To modify install path and other local settings, Makefile.usdef should be edited.
+
+To build,
+    make
+    sudo make install
+
+After installation, try examples.
+    cd example
+    make
+    ./ex?.exe

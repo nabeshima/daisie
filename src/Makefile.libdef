@@ -1,0 +1,67 @@
+#
+# $Id$
+# Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+# This file is subject to the MIT license available at,
+# http://opensource.org/licenses/mit-license.php
+#
+
+# target
+LIBNAME=daisie
+
+MAJOR_VERSION=2.0
+MINOR_VERSION=0
+
+# target
+LIBDISTDIR=../lib
+
+
+# header files
+HEADERS=../include/*.h ../include/*.ipp \
+
+# object files
+OBJS=\
+	Mass.o \
+	\
+        World.o \
+	Body.o \
+	Joint.o \
+	\
+	Space.o \
+	Geometry.o \
+	\
+	Simulator.o \
+	\
+	DaisieUtility.o \
+
+ifneq (${shell if pkg-config --exists ode; then echo DUMMY; fi},)
+ODE_CFLAGS=`pkg-config --cflags ode`
+ODE_LDFLAGS=`pkg-config --libs ode`
+endif
+
+# switch by OS
+OS=${shell uname}
+
+ifeq ($(OS),Linux) # Linux
+PTHREAD_LDFLAGS=-lpthread
+endif
+
+
+CFLAGS=-I../include $(USR_CFLAGS) $(ODE_CFLAGS)
+LDFLAGS=$(USR_LDFLAGS) $(ODE_LDFLAGS) $(PTHREAD_LDFLAGS) 
+
+
+ifeq ($(OS),Linux) # Linux
+LIBTARGET=$(LIBDISTDIR)/lib$(LIBNAME).so.$(MAJOR_VERSION).$(MINOR_VERSION)
+SHAREDFLAGS=-shared -Wl,-soname=lib$(LIBNAME).so.$(MAJOR_VERSION)
+LD_LIBRARY_PATH=$(INSTALLPATH)/lib
+INSTALL_COMMAND=( cd $(INSTALLPATH)/lib; ln -s lib$(LIBNAME).so.$(MAJOR_VERSION).$(MINOR_VERSION) lib$(LIBNAME).so.$(MAJOR_VERSION); ln -s lib$(LIBNAME).so.$(MAJOR_VERSION) lib$(LIBNAME).so )
+UNINSTALL_COMMAND=( cd $(INSTALLPATH)/lib; rm -f lib$(LIBNAME).so.$(MAJOR_VERSION).$(MINOR_VERSION) lib$(LIBNAME).so.$(MAJOR_VERSION) lib$(LIBNAME).so )
+endif
+
+ifeq ($(OS),Darwin) # Darwin
+LIBTARGET=$(LIBDISTDIR)/lib$(LIBNAME).$(MAJOR_VERSION).$(MINOR_VERSION).dylib
+SHAREDFLAGS=-dynamiclib -install_name lib$(LIBNAME).$(MAJOR_VERSION).$(MINOR_VERSION).dylib -compatibility_version $(MAJOR_VERSION) -current_version $(MAJOR_VERSION).$(MINOR_VERSION)
+DYLD_LIBRARY_PATH=$(INSTALLPATH)/lib
+INSTALL_COMMAND=( cd $(INSTALLPATH)/lib; ln -s lib$(LIBNAME).$(MAJOR_VERSION).$(MINOR_VERSION).dylib lib$(LIBNAME).$(MAJOR_VERSION).dylib; ln -s lib$(LIBNAME).$(MAJOR_VERSION).dylib lib$(LIBNAME).dylib )
+UNINSTALL_COMMAND=( cd $(INSTALLPATH)/lib; rm -f lib$(LIBNAME).$(MAJOR_VERSION).$(MINOR_VERSION).dylib lib$(LIBNAME).$(MAJOR_VERSION).dylib lib$(LIBNAME).dylib )
+endif

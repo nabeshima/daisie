@@ -1,0 +1,14 @@
+#
+# $Id$
+# Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+# This file is subject to the MIT license available at,
+# http://opensource.org/licenses/mit-license.php
+#
+
+INSTALLPATH=/usr/local
+
+CXX=g++
+
+USR_CFLAGS=-Wall -O3 -g -I/usr/local/include
+USR_LDFLAGS=-L/usr/local/lib -lglutil -L/opt/X11/lib/ -lX11
+
