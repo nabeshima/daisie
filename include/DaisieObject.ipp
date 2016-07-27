@@ -7,23 +7,22 @@
 
 // DaisieObject
 
-inline
-DaisieObject::DaisieObject( const string &name )
-  : _name( name ) {}
+namespace daisie {
 
-inline
-DaisieObject::~DaisieObject() {}
+inline DaisieObject::DaisieObject(const string& name) : _name(name) {}
 
-inline
-const string& DaisieObject::name() const {
-  return _name;
-}
+inline DaisieObject::~DaisieObject() {}
 
-template< class MANAGER_CLASS > 
-template< class OBJECT_CLASS > 
-inline
-OBJECT_CLASS* DaisieObjectFactory< MANAGER_CLASS >::create( const string &name ) {
-  OBJECT_CLASS *obj = new OBJECT_CLASS( *( static_cast< MANAGER_CLASS* >( this ) ), name );
-  add( obj, name );
+inline const string& DaisieObject::name() const { return _name; }
+
+template <class MANAGER_CLASS>
+template <class OBJECT_CLASS>
+inline OBJECT_CLASS* DaisieObjectFactory<MANAGER_CLASS>::create(
+    const string& name) {
+  OBJECT_CLASS* obj =
+      new OBJECT_CLASS((static_cast<MANAGER_CLASS*>(this)), name);
+  add(obj, name);
   return obj;
 }
+
+}  // namespace daisie

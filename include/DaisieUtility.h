@@ -8,15 +8,18 @@
 #ifndef _DAISIE_DAISIEUTILITY_H_
 #define _DAISIE_DAISIEUTILITY_H_
 
-#include <string>
-
 #include <cutil/Kinematics.h>
 
 #include <glutil/glutil.h>
 
-#include "ObjectFactory.h"
+#include <list>
+#include <string>
+#include <utility>
+#include <vector>
+
 #include "Body.h"
 #include "Geometry.h"
+#include "ObjectFactory.h"
 #include "Simulator.h"
 
 namespace daisie {
@@ -65,47 +68,49 @@ struct RayObjectPack {
   GLLineShape *shape;
 };
 
-
-class DaisieUtility 
-  : public ObjectFactory< GLShape > {
-  
-private:
-
+class DaisieUtility : public ObjectFactory<GLShape> {
+ private:
   Simulator *simulator;
+  unsigned int rand_seed;
 
   // for visualizaiton
-  list< pair< Body*, GLShape* > > bodyShapeList;
-  list< pair< Geometry*, GLShape* > > geomShapeList;
+  list<pair<Body *, GLShape *> > bodyShapeList;
+  list<pair<Geometry *, GLShape *> > geomShapeList;
   void syncShape();
-  
-public:
 
-  DaisieUtility( Simulator *simulator );
-  
-  SphereObjectPack createSphere( double radius, double density, const string &name_prefix = "" );
-  BoxObjectPack createBox( double lx, double ly, double lz, double density, const string &name_prefix = "" );
-  CapsuleObjectPack createCapsule( double radius, double length, double density, const string &name_prefix = "" );
-  CylinderObjectPack createCylinder( double radius, double length, double density, const string &name_prefix = "" );
-  TriangleMeshObjectPack createTriangleMesh( const vector< ColumnVector3 > &vertices,
-					     const vector< IntVector3 > &indices,
-					     double density, 
-					     const string &name_prefix = "" );
-  
-  PlaneObjectPack createPlane( double a, double b, double c, double d, double size = 10.0, int num = 4, const string &name_prefix = "" );
-  RayObjectPack createRay( double length, const string &name_prefix = "" );
-  
+  GLColor randomColor(float Satuation, float Value);
+
+ public:
+  explicit DaisieUtility(Simulator *simulator);
+
+  SphereObjectPack createSphere(double radius, double density,
+                                const string &name_prefix = "");
+  BoxObjectPack createBox(double lx, double ly, double lz, double density,
+                          const string &name_prefix = "");
+  CapsuleObjectPack createCapsule(double radius, double length, double density,
+                                  const string &name_prefix = "");
+  CylinderObjectPack createCylinder(double radius, double length,
+                                    double density,
+                                    const string &name_prefix = "");
+  TriangleMeshObjectPack createTriangleMesh(
+      const vector<ColumnVector3> &vertices, const vector<IntVector3> &indices,
+      double density, const string &name_prefix = "");
+
+  PlaneObjectPack createPlane(double a, double b, double c, double d,
+                              double size = 10.0, int num = 4,
+                              const string &name_prefix = "");
+  RayObjectPack createRay(double length, const string &name_prefix = "");
+
   // for visualizaiton
-  bool connect( Body *body, GLShape *shape );
-  bool connect( Geometry *geom, GLShape *shape );
+  bool connect(Body *body, GLShape *shape);
+  bool connect(Geometry *geom, GLShape *shape);
 
-  bool disconnect( Body *body, GLShape *shape );
-  bool disconnect( Geometry *geom, GLShape *shape );
+  bool disconnect(Body *body, GLShape *shape);
+  bool disconnect(Geometry *geom, GLShape *shape);
 
   // calculation
-  void update( double timeStep );
-
+  void update(double timeStep);
 };
-
-}
+}  // namespace daisie
 
 #endif

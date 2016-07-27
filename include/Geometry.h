@@ -8,12 +8,12 @@
 #ifndef _DAISIE_GEOMETRY_H_
 #define _DAISIE_GEOMETRY_H_
 
-#include <vector>
-#include <string>
-
 #include <cutil/Kinematics.h>
 
 #include <ode/collision.h>
+
+#include <string>
+#include <vector>
 
 #include "DaisieObject.h"
 
@@ -40,159 +40,126 @@ struct CollisionData {
   ColumnVector3 relTorque;
 };
 
-class Geometry 
-  : public DaisieObject {
-  
+class Geometry : public DaisieObject {
   friend class NearCallback;
 
-private:
-  
+ private:
   dGeomID _id;
-  
+
   bool keepColData;
-  vector< CollisionData > colDataVec;
-  
+  vector<CollisionData> colDataVec;
+
   // non-copyable
-  Geometry( const Geometry& );
-  void operator=( const Geometry& );
-  
-protected:
-  
-  Geometry( Space &space, dGeomID id, const string &name );
+  Geometry(const Geometry &);
+  void operator=(const Geometry &);
+
+ protected:
+  Geometry(Space *space, dGeomID id, const string &name);
   virtual ~Geometry();
-  
-public:
-  
+
+ public:
   dGeomID id() const;
 
-  void setPosition( const ColumnVector3 &p );
-  void setQuaternion( const Quaternion &q );
-  
+  void setPosition(const ColumnVector3 &p);
+  void setQuaternion(const Quaternion &q);
+
   ColumnVector3 getPosition() const;
   Quaternion getQuaternion() const;
 
-  void connect( Body* body );
-  Body* getConnectedBody() const;
-  
-  void setFeedbackEnable( bool onoff );
+  void connect(Body *body);
+  Body *getConnectedBody() const;
+
+  void setFeedbackEnable(bool onoff);
   bool isFeedbackEnabled() const;
-  
-  const vector< CollisionData >& getFeedback() const;
+
+  const vector<CollisionData> &getFeedback() const;
   void clearFeedback();
 };
 
+class SphereGeometry : public Geometry {
+  friend class DaisieObjectFactory<Space>;
 
-class SphereGeometry
-  : public Geometry {
+ protected:
+  SphereGeometry(Space *space, const string &name);
 
-  friend class DaisieObjectFactory< Space >;
-
-protected:
-  
-  SphereGeometry( Space &space, const string &name );
-  
-public:
-  
-  void setRadius( double radius );
+ public:
+  void setRadius(double radius);
 };
 
-class BoxGeometry
-  : public Geometry {
+class BoxGeometry : public Geometry {
+  friend class DaisieObjectFactory<Space>;
 
-  friend class DaisieObjectFactory< Space >;
+ protected:
+  BoxGeometry(Space *space, const string &name);
 
-protected:
-  
-  BoxGeometry( Space &space, const string &name );
-  
-public:
-  
-  void setLengths( double lx, double ly, double lz );
+ public:
+  void setLengths(double lx, double ly, double lz);
 };
 
-class PlaneGeometry
-  : public Geometry {
+class PlaneGeometry : public Geometry {
+  friend class DaisieObjectFactory<Space>;
 
-  friend class DaisieObjectFactory< Space >;
+ protected:
+  PlaneGeometry(Space *space, const string &name);
 
-protected:
-  
-  PlaneGeometry( Space &space, const string &name );
-  
-public:
-  
+ public:
   // These parameters are for ax + by + cz = d
-  void setParams( double a, double b, double c, double d );
+  void setParams(double a, double b, double c, double d);
 };
 
-class CapsuleGeometry
-  : public Geometry {
+class CapsuleGeometry : public Geometry {
+  friend class DaisieObjectFactory<Space>;
 
-  friend class DaisieObjectFactory< Space >;
+ protected:
+  CapsuleGeometry(Space *space, const string &name);
 
-protected:
-  
-  CapsuleGeometry( Space &space, const string &name );
-  
-public:
-  
-  void setParams( double radius, double length );
+ public:
+  void setParams(double radius, double length);
 };
 
-class CylinderGeometry
-  : public Geometry {
+class CylinderGeometry : public Geometry {
+  friend class DaisieObjectFactory<Space>;
 
-  friend class DaisieObjectFactory< Space >;
+ protected:
+  CylinderGeometry(Space *space, const string &name);
 
-protected:
-  
-  CylinderGeometry( Space &space, const string &name );
-  
-public:
-  
-  void setParams( double radius, double length );
+ public:
+  void setParams(double radius, double length);
 };
 
-class RayGeometry
-  : public Geometry {
+class RayGeometry : public Geometry {
+  friend class DaisieObjectFactory<Space>;
 
-  friend class DaisieObjectFactory< Space >;
+ protected:
+  RayGeometry(Space *space, const string &name);
 
-protected:
-  
-  RayGeometry( Space &space, const string &name );
-  
-public:
-  
-  void setLength( double length );
+ public:
+  void setLength(double length);
 };
 
-class TriangleMeshGeometry 
-  : public Geometry {
+class TriangleMeshGeometry : public Geometry {
+  friend class DaisieObjectFactory<Space>;
 
-  friend class DaisieObjectFactory< Space >;
-
-private:
+ private:
   dTriMeshDataID Data;
-  
+
   int vertexNum;
   double **vertexBuf;
-  
+  // float **vertexBuf;
+
   int indexNum;
   dTriIndex *indexBuf;
-  
+
   void destroy();
 
-protected:
-  
-  TriangleMeshGeometry( Space &space, const string &name );
+ protected:
+  TriangleMeshGeometry(Space *space, const string &name);
   ~TriangleMeshGeometry();
 
-public:  
-  void build( const vector< ColumnVector3 > &vertices,
-              const vector< IntVector3 > &indices );
+ public:
+  void build(const vector<ColumnVector3> &vertices,
+             const vector<IntVector3> &indices);
 };
-
-}
+}  // namespace daisie
 
 #endif

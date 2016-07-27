@@ -1,6 +1,6 @@
 REQUIREMENTS:
-libcutil, https://libcutil.googlecode.com/
-libglutil, https://glutil.googlecode.com/
+cutil, https://github.com/nabeshima/cutil
+glutil, https://github.com/nabeshima/glutil
 Open Dynamics Engine (ODE), http://sourceforge.net/projects/opende/ (0.10 or later)
 pkg-config for X11 glut ode
 

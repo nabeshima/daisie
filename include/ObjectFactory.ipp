@@ -5,125 +5,121 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-template< class BASE_CLASS > 
-inline
-ObjectFactory< BASE_CLASS >::~ObjectFactory() {
+namespace daisie {
+
+template <class BASE_CLASS>
+inline ObjectFactory<BASE_CLASS>::~ObjectFactory() {
   destroyAll();
 }
 
-template< class BASE_CLASS > 
-inline
-void ObjectFactory< BASE_CLASS >::add( BASE_CLASS *obj, const string &name ) {
+template <class BASE_CLASS>
+inline void ObjectFactory<BASE_CLASS>::add(BASE_CLASS* obj,
+                                           const string& name) {
+  objList.push_back(obj);
 
-  objList.push_back( obj );
-  
-  if ( name != "" ) {
-    objMap.insert( pair< const string, BASE_CLASS* >( name, obj ) );
+  if (name != "") {
+    objMap.insert(pair<const string, BASE_CLASS*>(name, obj));
   }
 }
 
-template< class BASE_CLASS > 
-inline
-void ObjectFactory< BASE_CLASS >::destroyAll() {
-  typename list< BASE_CLASS* >::iterator 
-    it = objList.begin(),
-    endIt = objList.end();
-  
-  while ( it != endIt ) {
+template <class BASE_CLASS>
+inline void ObjectFactory<BASE_CLASS>::destroyAll() {
+  typename list<BASE_CLASS *>::iterator it = objList.begin(),
+                                        endIt = objList.end();
+
+  while (it != endIt) {
     delete *it;
     ++it;
-  } 
-  
+  }
+
   objList.clear();
   objMap.clear();
 }
 
-template< class BASE_CLASS > 
-template< class OBJECT_CLASS > 
-inline
-OBJECT_CLASS* ObjectFactory< BASE_CLASS >::create( const string &name ) {
-  OBJECT_CLASS *obj = new OBJECT_CLASS();
-  add( obj, name );
+template <class BASE_CLASS>
+template <class OBJECT_CLASS>
+inline OBJECT_CLASS* ObjectFactory<BASE_CLASS>::create(const string& name) {
+  OBJECT_CLASS* obj = new OBJECT_CLASS();
+  add(obj, name);
   return obj;
 }
 
-template< class BASE_CLASS > 
-inline
-bool ObjectFactory< BASE_CLASS >::destroy( BASE_CLASS* obj ) {
-
-  if ( obj == NULL ) {
+template <class BASE_CLASS>
+inline bool ObjectFactory<BASE_CLASS>::destroy(BASE_CLASS* obj) {
+  if (obj == NULL) {
     return false;
   }
-  
+
   {
-    typename list< BASE_CLASS* >::iterator it = find( objList.begin(), objList.end(), obj );
-    
-    if ( it != objList.end() ) {
-      objList.erase( it );
-    }
-    else {
+    typename list<BASE_CLASS*>::iterator it =
+        find(objList.begin(), objList.end(), obj);
+
+    if (it != objList.end()) {
+      objList.erase(it);
+    } else {
       return false;
     }
   }
-  
-  if ( obj->name() != "" ) {
-    typename map< const string, BASE_CLASS* >::iterator it = objMap.find( obj->name() );
-    
-    if ( it != objMap.end() ) {
-      objMap.erase( it );
+
+  if (obj->name() != "") {
+    typename map<const string, BASE_CLASS*>::iterator it =
+        objMap.find(obj->name());
+
+    if (it != objMap.end()) {
+      objMap.erase(it);
     }
   }
-  
+
   delete obj;
   return true;
 }
 
-template< class BASE_CLASS > 
-inline
-bool ObjectFactory< BASE_CLASS >::destroy( const string &name ) {
-  
-  if ( name == "" ) {
+template <class BASE_CLASS>
+inline bool ObjectFactory<BASE_CLASS>::destroy(const string& name) {
+  if (name == "") {
     return false;
   }
-  
-  BASE_CLASS *obj = NULL;
-  
+
+  BASE_CLASS* obj = NULL;
+
   {
-    typename map< const string, BASE_CLASS* >::iterator it = objMap.find( name );
-    
-    if ( it != objMap.end() ) {
+    typename map<const string, BASE_CLASS*>::iterator it = objMap.find(name);
+
+    if (it != objMap.end()) {
       obj = it->second;
-      objMap.erase( it );
+      objMap.erase(it);
     }
   }
-  
-  if ( obj == NULL ) {
+
+  if (obj == NULL) {
     return false;
   }
-  
+
   {
-    typename list< BASE_CLASS* >::iterator it = find( objList.begin(), objList.end(), obj );
-    
-    if ( it != objList.end() ) {
-      objList.erase( it );
+    typename list<BASE_CLASS*>::iterator it =
+        find(objList.begin(), objList.end(), obj);
+
+    if (it != objList.end()) {
+      objList.erase(it);
     }
   }
-  
+
   delete obj;
   return true;
 }
 
-template< class BASE_CLASS > 
-inline
-BASE_CLASS* ObjectFactory< BASE_CLASS >::get( const string &name ) const {
-  
-  if ( name != "" ) {
-    typename map< const string, BASE_CLASS* >::const_iterator it = objMap.find( name );
-    
-    if ( it != objMap.end() ) {
+template <class BASE_CLASS>
+inline BASE_CLASS* ObjectFactory<BASE_CLASS>::get(const string& name) const {
+  if (name != "") {
+    typename map<const string, BASE_CLASS*>::const_iterator it =
+        objMap.find(name);
+
+    if (it != objMap.end()) {
       return it->second;
     }
   }
-  
+
   return NULL;
 }
+
+}  // namespace daisie

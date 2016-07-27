@@ -10,38 +10,33 @@
 
 #include "ObjectFactory.h"
 
+#include <string>
+
 namespace daisie {
 
 using namespace std;
 
 class DaisieObject {
-
-private:
-  
+ private:
   string _name;
-  
-public:
-  
-  DaisieObject( const string &name );
+
+ public:
+  explicit DaisieObject(const string& name);
   virtual ~DaisieObject();
-  
+
   const string& name() const;
 };
 
-
-template< class MANAGER_CLASS > 
-class DaisieObjectFactory
-  : public ObjectFactory< DaisieObject > {
-  
-public:
-  
+template <class MANAGER_CLASS>
+class DaisieObjectFactory : public ObjectFactory<DaisieObject> {
+ public:
   // override
-  template< class OBJECT_CLASS > 
-  OBJECT_CLASS* create( const string &name );
+  template <class OBJECT_CLASS>
+  OBJECT_CLASS* create(const string& name);
 };
 
-#include "DaisieObject.ipp"
+}  // namespace daisie
 
-}
+#include "DaisieObject.ipp"
 
 #endif

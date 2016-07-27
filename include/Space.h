@@ -8,11 +8,11 @@
 #ifndef _DAISIE_SPACE_H_
 #define _DAISIE_SPACE_H_
 
+#include <ode/collision_space.h>
+
 #include <list>
 #include <map>
 #include <string>
-
-#include <ode/collision_space.h>
 
 #include "DaisieObject.h"
 
@@ -22,27 +22,22 @@ class Geometry;
 
 using namespace std;
 
-class Space 
-  : public DaisieObjectFactory< Space > {
-  
-private:
-  
+class Space : public DaisieObjectFactory<Space> {
+ private:
   dSpaceID _id;
-  
+
   // non-copyable
-  Space( const Space& );
-  void operator=( const Space& );
-  
-public:
-  
+  Space(const Space&);
+  void operator=(const Space&);
+
+ public:
   Space();
   virtual ~Space();
-  
+
   dSpaceID id() const;
-  
+
   void clearFeedback();
 };
-
-}
+}  // namespace daisie
 
 #endif

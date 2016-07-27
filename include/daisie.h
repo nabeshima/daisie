@@ -8,12 +8,15 @@
 #ifndef _DAISIE_H_
 #define _DAISIE_H_
 
-#include "ObjectFactory.h"
 #include "DaisieObject.h"
+#include "ObjectFactory.h"
 
 #include "Mass.h"
+
 #include "Body.h"
+
 #include "Joint.h"
+
 #include "World.h"
 
 #include "Geometry.h"

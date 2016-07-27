@@ -9,6 +9,6 @@ INSTALLPATH=/usr/local
 
 CXX=g++
 
-USR_CFLAGS=-Wall -O3 -g -I/usr/local/include
+USR_CFLAGS=-Wall -O3 -g -I/usr/local/include  -DdDOUBLE
 USR_LDFLAGS=-L/usr/local/lib -lglutil -L/opt/X11/lib/ -lX11
 
