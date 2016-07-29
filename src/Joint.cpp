@@ -34,13 +34,21 @@ Joint::~Joint() { dJointDestroy(_id); }
 dJointID Joint::id() const { return _id; }
 
 void Joint::connect(Body *body1, Body *body2) {
-  dJointAttach(_id, ((body1 != NULL) ? body1->id() : NULL),
-               ((body2 != NULL) ? body2->id() : NULL));
+  // dJointAttach(_id, ((body1 != NULL) ? body1->id() : NULL),
+  //((body2 != NULL) ? body2->id() : NULL));
+
+  // reverted to make body1 is the base
+  dJointAttach(_id, ((body2 != NULL) ? body2->id() : NULL),
+               ((body1 != NULL) ? body1->id() : NULL));
 }
 
 Body *Joint::getConnectedBody(bool isFirst) const {
+  // return static_cast<Body *>(
+  // dBodyGetData(dJointGetBody(_id, ((isFirst) ? 0 : 1))));
+
+  // reverted to make body1 is the base
   return static_cast<Body *>(
-      dBodyGetData(dJointGetBody(_id, ((isFirst) ? 0 : 1))));
+      dBodyGetData(dJointGetBody(_id, ((isFirst) ? 1 : 0))));
 }
 
 void Joint::setFeedbackEnable(bool onoff) {

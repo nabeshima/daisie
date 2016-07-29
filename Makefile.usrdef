@@ -7,8 +7,13 @@
 
 INSTALLPATH=/usr/local
 
+# switch by OS
+ifeq (${shell uname},Darwin)
+CXX=clang++
+else
 CXX=g++
+endif
 
-USR_CFLAGS=-Wall -O3 -g -I/usr/local/include  -DdDOUBLE
+USR_CFLAGS=-Wall -O3 -g -I/usr/local/include -DdDOUBLE
 USR_LDFLAGS=-L/usr/local/lib -lglutil -L/opt/X11/lib/ -lX11
 
